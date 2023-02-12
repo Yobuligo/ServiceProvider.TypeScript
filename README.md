@@ -11,7 +11,7 @@ The following chapter describes how to use the service provider.
 
 ### Implement service
 As in TypeScript interface types are only available during design time but not at runtime, it is not possible to request a service only by interface type as it won't be possible to analyze the interface type.
-Instead it is necessary to provide a concrete type which exists at runtime which is connected to the concrete service type.
+Instead it is necessary to provide a concrete type which exists at runtime which is connected to the concrete service type. Theses concrete types are represented by classes which are called service class.
 So, implementing a service requires the following steps:
 
 1. Provide service type
