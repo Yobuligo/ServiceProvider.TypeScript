@@ -40,7 +40,7 @@ To request a service from the service provider, at first it has to be provided t
 Providing an already existing service type overrides the existing service definition by the new one.
 There are two ways to provide a service to the service provider:
 
-1. Put service to set an already initialized service instance to the service provider. The service class (here 'LoggerService') is required as first parameter. The class type is the key for addressing that concrete service. As the service type is connected to that class, an instance of that service type has to be injected as second parameter.
+1. Put service to set an already initialized service instance to the service provider. The service class (here 'LoggerService') is required as first parameter. The class type is the key for addressing the service type. As the service type is connected to that class, an instance of that service type has to be injected as second parameter.
 To put a service means it is handled as a singleton service. Each time that service is requested, the same instance is returned.
 ```
 const logger: ILogger = new Logger();
