@@ -49,7 +49,7 @@ SP.put(LoggerService, logger);
 
 2. Register service is an alternative to putting a service. Here the service is only initialized on demand.
 The registration of a service needs 3 parameter. The service class as key, which is connected to the service type. The concrete service implementation class, which should be initialized when the service is requested and the service instantiation type. The service instantiation type must be either multiple or single instantiable.
-It defines if either always the same service instance is returned or that with each service request a new instance of the service is returned.
+It defines if either always the same service instance is returned or that with each service request a new instance of the service is created and returned.
 ```
 SP.register(LoggerService, Logger, ServiceInstanceType.MULTI_INSTANTIABLE);
 ```
