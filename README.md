@@ -72,13 +72,13 @@ logger?.log(`Message to be logged`);
 ```
 
 ### Remove a service
-To a remove a service from the service provider method `remove` is used. As parameter the service class has to be provided as key.
+To remove a service from the service provider method `remove` is used. As parameter the service class has to be provided as key.
 ```
 SP.remove(LoggerService);
 ```
 
-### Does a service exist
-For a more readable code the method `contains` returns if a service is defined in the service provide, without the need to initialize it in case it is only registered.
+### Check if a service exist
+To write more readable code and saving memory the method `contains` returns if a service is defined in the service provider, without the need to initialize the service in case it is registered.
 ```
 const contains = SP.contains(LoggerService);
 ```
