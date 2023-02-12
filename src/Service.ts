@@ -1,3 +1,3 @@
 export abstract class Service<T> {
-  instance: T = {} as T;
+  readonly instance: T = {} as T;
 }

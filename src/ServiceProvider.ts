@@ -10,16 +10,18 @@ class ServiceProviderDefault implements IServiceProvider {
     return this.findServiceDefinition(abstractServiceType) !== undefined;
   }
 
+  containsNot<T extends Service<any>>(
+    abstractServiceType: new () => T
+  ): boolean {
+    return !this.contains(abstractServiceType);
+  }
+
   fetch<T extends Service<any>, K extends keyof T>(
     abstractServiceType: new () => T
   ): T[K] {
-    const service = this.fetchOrNull(abstractServiceType);
-    if (service !== undefined) {
-      return service as T[K];
-    }
-
-    throw new Error(
-      `Error while fetching service '${abstractServiceType.name}'. Service is unknown. Register the service or put it to the service provider.`
+    return (
+      (this.fetchOrNull(abstractServiceType) as T[K]) ??
+      this.raiseUnknownServiceException(abstractServiceType)
     );
   }
 
@@ -50,7 +52,6 @@ class ServiceProviderDefault implements IServiceProvider {
     abstractServiceType: new () => T,
     service: T[K]
   ): void {
-    this.findServiceDefinition(abstractServiceType);
     const serviceDefinition: IServiceDefinition<T, K> = {
       abstractServiceType: abstractServiceType,
       serviceInstanceType: ServiceInstanceType.SINGLE_INSTANTIABLE,
@@ -64,22 +65,22 @@ class ServiceProviderDefault implements IServiceProvider {
       return serviceDefinition.abstractServiceType === abstractServiceType;
     });
 
-    if (index === -1) {
-      return;
+    if (index !== -1) {
+      this.serviceDefinitions.splice(index, 1);
     }
-
-    this.serviceDefinitions.splice(index, 1);
   }
 
   register<T extends Service<any>, K extends keyof T>(
     abstractServiceType: new () => T,
     concreteServiceType: new () => T[K],
-    serviceInstanceType: ServiceInstanceType
+    serviceInstanceType?: ServiceInstanceType | undefined
   ): void {
+    const resolvedServiceInstanceType =
+      serviceInstanceType ?? ServiceInstanceType.SINGLE_INSTANTIABLE;
     const serviceDefinition: IServiceDefinition<T, K> = {
       abstractServiceType: abstractServiceType,
       concreteServiceType: concreteServiceType,
-      serviceInstanceType: serviceInstanceType,
+      serviceInstanceType: resolvedServiceInstanceType,
     };
     this.addServiceDefinition(serviceDefinition);
   }
@@ -98,7 +99,6 @@ class ServiceProviderDefault implements IServiceProvider {
     if (this.contains(serviceDefinition.abstractServiceType)) {
       this.remove(serviceDefinition.abstractServiceType);
     }
-
     this.serviceDefinitions.push(serviceDefinition);
   }
 
@@ -119,6 +119,14 @@ class ServiceProviderDefault implements IServiceProvider {
       return undefined;
     }
     return new serviceDefinition.concreteServiceType();
+  }
+
+  private raiseUnknownServiceException<T extends Service<any>>(
+    abstractServiceType: new () => T
+  ): never {
+    throw new Error(
+      `Error while fetching service '${abstractServiceType.name}'. Service is unknown. Register the service or put it to the service provider.`
+    );
   }
 }
 

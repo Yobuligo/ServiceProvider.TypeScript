@@ -3,6 +3,9 @@ import { ServiceInstanceType } from "./ServiceProviderTypes";
 
 export interface IServiceProvider {
   contains<T extends Service<any>>(abstractServiceType: new () => T): boolean;
+  containsNot<T extends Service<any>>(
+    abstractServiceType: new () => T
+  ): boolean;
   fetch<T extends Service<any>, K extends keyof T>(
     abstractServiceType: new () => T
   ): T[K];
@@ -17,6 +20,6 @@ export interface IServiceProvider {
   register<T extends Service<any>, K extends keyof T>(
     abstractServiceType: new () => T,
     concreteServiceType: new () => T[K],
-    serviceInstanceType: ServiceInstanceType
+    serviceInstanceType?: ServiceInstanceType
   ): void;
 }

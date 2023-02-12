@@ -2,8 +2,8 @@ import { Service } from "./Service";
 import { ServiceInstanceType } from "./ServiceProviderTypes";
 
 export interface IServiceDefinition<T extends Service<any>, K extends keyof T> {
-  abstractServiceType: new () => T;
-  concreteServiceType?: new () => T[K];
-  serviceInstanceType: ServiceInstanceType;
+  readonly abstractServiceType: new () => T;
+  readonly concreteServiceType?: new () => T[K];
+  readonly serviceInstanceType: ServiceInstanceType;
   service?: T[K];
 }
