@@ -1,6 +1,6 @@
 # ServiceProvider.TypeScript
 An implementation of the service provider / service locator pattern for TypeScript. 
-To get more independent from concrete classes required entities, services, etc. are provided via interface type.
+To get more independent from concrete classes and tow write more flexiable code required entities, services, etc. are provided via interface type.
 The service provider is responsible for providing theses requested services.
 
 ## Installation
@@ -55,7 +55,7 @@ SP.register(LoggerService, Logger, ServiceInstanceType.MULTI_INSTANTIABLE);
 ```
 
 ### Request a service
-Requesting a service means that by providing the service class a service instance of the service type is returned. The concrete implementation class of the service type is unknown, which makes it easy to exchange a service.
+Requesting a service means that by providing the service class a service instance of the service type is returned. The concrete implementation class of the service type is unknown, which makes it easier to replace a service.
 There are two ways to request a service:
 
 1. Fetch to fetch a service the service class has to be provided as key and returns the service. If the service doesn't exist an exception is raised.
