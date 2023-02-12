@@ -1,6 +1,6 @@
 # ServiceProvider.TypeScript
 An implementation of the service provider / service locator pattern for TypeScript. 
-To get more independent from concrete classes, required entities, services, etc. are provided via interface type.
+To get more independent from concrete classes required entities, services, etc. are provided via interface type.
 The service provider is responsible for providing theses requested services.
 
 ## Installation
