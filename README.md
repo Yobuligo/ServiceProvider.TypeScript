@@ -41,6 +41,7 @@ Providing an already existing service type overrides the existing service defini
 There are two ways to provide a service to the service provider:
 
 1. Put service
+
 By putting a service, an already initialized service will be set to the service provider. The service class (here 'LoggerService') is required as first parameter. The class type is the key for addressing that concrete service. As the service type is connected to that class, an instance of that service type has to be injected as second parameter.
 To put a service means it is handled as a singleton service. Each time that service is requested, the same instance is returned.
 ```
