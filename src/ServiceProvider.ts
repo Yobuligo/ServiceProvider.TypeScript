@@ -1,131 +1,140 @@
-import { IServiceDefinition } from "./IServiceDefinition";
+import { IServiceMeta } from "./IServiceMeta";
 import { IServiceProvider } from "./IServiceProvider";
-import { Service } from "./Service";
+import { ServiceDefinition } from "./ServiceDefinition";
 import { ServiceInstanceType } from "./ServiceProviderTypes";
 
 class ServiceProviderDefault implements IServiceProvider {
-  private serviceDefinitions: IServiceDefinition<any, any>[] = [];
+  private serviceMetas: IServiceMeta<any, any>[] = [];
 
-  contains<T extends Service<any>>(abstractServiceType: new () => T): boolean {
-    return this.findServiceDefinition(abstractServiceType) !== undefined;
-  }
-
-  containsNot<T extends Service<any>>(
-    abstractServiceType: new () => T
+  contains<T extends ServiceDefinition<any>>(
+    serviceDefinition: new () => T
   ): boolean {
-    return !this.contains(abstractServiceType);
+    return this.findServiceMeta(serviceDefinition) !== undefined;
   }
 
-  fetch<T extends Service<any>, K extends keyof T>(
-    abstractServiceType: new () => T
-  ): T[K] {
+  containsNot<T extends ServiceDefinition<any>>(
+    serviceDefinition: new () => T
+  ): boolean {
+    return !this.contains(serviceDefinition);
+  }
+
+  fetch<T extends ServiceDefinition<any>, TServiceType extends keyof T>(
+    serviceDefinition: new () => T
+  ): T[TServiceType] {
     return (
-      (this.fetchOrNull(abstractServiceType) as T[K]) ??
-      this.raiseUnknownServiceException(abstractServiceType)
+      (this.fetchOrNull(serviceDefinition) as T[TServiceType]) ??
+      this.raiseUnknownServiceException(serviceDefinition)
     );
   }
 
-  fetchOrNull<T extends Service<any>, K extends keyof T>(
-    abstractServiceType: new () => T
-  ): T[K] | undefined {
-    const serviceDefinition = this.findServiceDefinition(abstractServiceType);
-    if (serviceDefinition === undefined) {
+  fetchOrNull<T extends ServiceDefinition<any>, TServiceType extends keyof T>(
+    serviceDefinition: new () => T
+  ): T[TServiceType] | undefined {
+    const serviceMeta = this.findServiceMeta(serviceDefinition);
+    if (serviceMeta === undefined) {
       return;
     }
 
-    switch (serviceDefinition.serviceInstanceType) {
+    switch (serviceMeta.serviceInstanceType) {
       case ServiceInstanceType.SINGLE_INSTANTIABLE: {
-        return this.fetchSingleInstantiableService<T, K>(serviceDefinition);
+        return this.fetchSingleInstantiableService<T, TServiceType>(
+          serviceMeta
+        );
       }
       case ServiceInstanceType.MULTI_INSTANTIABLE: {
-        return this.createService(serviceDefinition) as T[K];
+        return this.createService(serviceMeta) as T[TServiceType];
       }
       default: {
         throw new Error(
-          `Error while fetching service ${abstractServiceType.name}. ServiceInstanceType ${serviceDefinition.serviceInstanceType} is unknown.`
+          `Error while fetching service ${serviceDefinition.name}. ServiceInstanceType ${serviceMeta.serviceInstanceType} is unknown.`
         );
       }
     }
   }
 
-  put<T extends Service<any>, K extends keyof T>(
-    abstractServiceType: new () => T,
-    service: T[K]
+  put<T extends ServiceDefinition<any>, TServiceType extends keyof T>(
+    serviceDefinition: new () => T,
+    serviceInstance: T[TServiceType]
   ): void {
-    const serviceDefinition: IServiceDefinition<T, K> = {
-      abstractServiceType: abstractServiceType,
+    const serviceMeta: IServiceMeta<T, TServiceType> = {
+      serviceDefinition: serviceDefinition,
       serviceInstanceType: ServiceInstanceType.SINGLE_INSTANTIABLE,
-      service: service,
+      serviceInstance: serviceInstance,
     };
-    this.addServiceDefinition(serviceDefinition);
+    this.addServiceMeta(serviceMeta);
   }
 
-  remove<T extends Service<any>>(abstractServiceType: new () => T): void {
-    const index = this.serviceDefinitions.findIndex((serviceDefinition) => {
-      return serviceDefinition.abstractServiceType === abstractServiceType;
+  remove<T extends ServiceDefinition<any>>(
+    serviceDefinition: new () => T
+  ): void {
+    const serviceMetaIndex = this.serviceMetas.findIndex((serviceMeta) => {
+      return serviceMeta.serviceDefinition === serviceDefinition;
     });
 
-    if (index !== -1) {
-      this.serviceDefinitions.splice(index, 1);
+    if (serviceMetaIndex !== -1) {
+      this.serviceMetas.splice(serviceMetaIndex, 1);
     }
   }
 
-  register<T extends Service<any>, K extends keyof T>(
-    abstractServiceType: new () => T,
-    concreteServiceType: new () => T[K],
+  register<T extends ServiceDefinition<any>, TServiceType extends keyof T>(
+    serviceDefinition: new () => T,
+    concreteServiceType: new () => T[TServiceType],
     serviceInstanceType?: ServiceInstanceType | undefined
   ): void {
     const resolvedServiceInstanceType =
       serviceInstanceType ?? ServiceInstanceType.SINGLE_INSTANTIABLE;
-    const serviceDefinition: IServiceDefinition<T, K> = {
-      abstractServiceType: abstractServiceType,
+    const serviceMeta: IServiceMeta<T, TServiceType> = {
+      serviceDefinition: serviceDefinition,
       concreteServiceType: concreteServiceType,
       serviceInstanceType: resolvedServiceInstanceType,
     };
-    this.addServiceDefinition(serviceDefinition);
+    this.addServiceMeta(serviceMeta);
   }
 
-  private findServiceDefinition<T extends Service<any>, K extends keyof T>(
-    abstractServiceType: new () => T
-  ): IServiceDefinition<T, K> | undefined {
-    return this.serviceDefinitions.find((serviceDefinition) => {
-      return serviceDefinition.abstractServiceType === abstractServiceType;
+  private findServiceMeta<
+    T extends ServiceDefinition<any>,
+    TServiceType extends keyof T
+  >(serviceDefinition: new () => T): IServiceMeta<T, TServiceType> | undefined {
+    return this.serviceMetas.find((serviceMeta) => {
+      return serviceMeta.serviceDefinition === serviceDefinition;
     });
   }
 
-  private addServiceDefinition<T extends Service<any>, K extends keyof T>(
-    serviceDefinition: IServiceDefinition<T, K>
-  ): void {
-    if (this.contains(serviceDefinition.abstractServiceType)) {
-      this.remove(serviceDefinition.abstractServiceType);
+  private addServiceMeta<
+    T extends ServiceDefinition<any>,
+    TServiceType extends keyof T
+  >(serviceMeta: IServiceMeta<T, TServiceType>): void {
+    if (this.contains(serviceMeta.serviceDefinition)) {
+      this.remove(serviceMeta.serviceDefinition);
     }
-    this.serviceDefinitions.push(serviceDefinition);
+    this.serviceMetas.push(serviceMeta);
   }
 
   private fetchSingleInstantiableService<
-    T extends Service<any>,
-    K extends keyof T
-  >(serviceDefinition: IServiceDefinition<T, keyof T>): T[K] | undefined {
-    if (serviceDefinition.service === undefined) {
-      serviceDefinition.service = this.createService(serviceDefinition);
+    T extends ServiceDefinition<any>,
+    TServiceType extends keyof T
+  >(serviceMeta: IServiceMeta<T, keyof T>): T[TServiceType] | undefined {
+    if (serviceMeta.serviceInstance === undefined) {
+      serviceMeta.serviceInstance = this.createService(serviceMeta);
     }
-    return serviceDefinition.service as T[K] | undefined;
+    return serviceMeta.serviceInstance as T[TServiceType] | undefined;
   }
 
-  private createService<T extends Service<any>, K extends keyof T>(
-    serviceDefinition: IServiceDefinition<T, K>
-  ): T[K] | undefined {
-    if (serviceDefinition.concreteServiceType === undefined) {
+  private createService<
+    T extends ServiceDefinition<any>,
+    TServiceType extends keyof T
+  >(serviceMeta: IServiceMeta<T, TServiceType>): T[TServiceType] | undefined {
+    if (serviceMeta.concreteServiceType === undefined) {
       return undefined;
     }
-    return new serviceDefinition.concreteServiceType();
+    return new serviceMeta.concreteServiceType();
   }
 
-  private raiseUnknownServiceException<T extends Service<any>>(
-    abstractServiceType: new () => T
+  private raiseUnknownServiceException<T extends ServiceDefinition<any>>(
+    serviceDefinition: new () => T
   ): never {
     throw new Error(
-      `Error while fetching service '${abstractServiceType.name}'. Service is unknown. Register the service or put it to the service provider.`
+      `Error while fetching service '${serviceDefinition.name}'. Service is unknown. Register the service or put it to the service provider.`
     );
   }
 }

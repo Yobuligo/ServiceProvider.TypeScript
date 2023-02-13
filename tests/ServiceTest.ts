@@ -1,11 +1,11 @@
 import { expect } from "chai";
-import { Service } from "../src/Service";
+import { ServiceDefinition } from "../src/ServiceDefinition";
 
 interface ITest {
   testMe(): void;
 }
 
-class TestService extends Service<ITest> {}
+class TestService extends ServiceDefinition<ITest> {}
 
 describe("Service Class", () => {
   it("Verify service instance type is correct", () => {

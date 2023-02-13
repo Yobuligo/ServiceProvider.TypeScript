@@ -1,12 +1,12 @@
 import { expect } from "chai";
-import { Service } from "../src/Service";
+import { ServiceDefinition } from "../src/ServiceDefinition";
 import { SP } from "../src/ServiceProvider";
 
 interface ILogger {
   log(message: string): void;
 }
 
-class LoggerService extends Service<ILogger> {}
+class LoggerService extends ServiceDefinition<ILogger> {}
 
 class Logger implements ILogger {
   public message: string = "";
