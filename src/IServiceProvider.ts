@@ -4,6 +4,7 @@ import { ServiceInstanceType } from "./ServiceProviderTypes";
 /**
  * An implementation of this interface represents a service provider.
  * It is responsible for providing services which were added or registered before.
+ * It is a dependency injection framework.
  *
  * The provided services are normally of an abstract type, but only the added or registered services are concrete.
  * So the requested services must only be of an abstract type which can be easily exchanged.
