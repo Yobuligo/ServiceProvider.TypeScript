@@ -2,7 +2,10 @@
 A dependency injection implementation for TypeScript by using a service provider / service locator.
 
 ## Installation
-TBD
+Install the service provider via:
+```
+npm install --save service-provider.typescript
+```
 
 ## Usage
 The service provider is used to become more independent from concrete classes and to write more flexible code. Instead of initializing concrete service classes, a service is requested at the service provider via a service definition. The service definition is connected to a service type, which is normally represented by an interface type. A service definition per service is required, as an interface type as service type only exists at designtime, but there must be a concrete type (the service definition class) which is available at runtime, which can be analyzed and which is connected to the service type.
