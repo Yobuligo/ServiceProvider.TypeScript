@@ -68,7 +68,7 @@ SP.register(LoggerService, Logger, ServiceInstanceType.MULTI_INSTANTIABLE);
 ```
 
 ### Request a service
-Requesting a service is possible by providing the corresponding service definition, which is connected to the abstract service type to the methods fetch or fetchOrNull. As the service definition is connected to the abstract service type, the caller has only a dependency to that service type. The concrete service class type is unknown. Following two examples are shown for fetching services:
+Requesting a service is possible by providing the corresponding service definition, which is connected to the abstract service type, to the methods fetch or fetchOrNull. As the service definition is connected to the abstract service type, the caller has only a dependency to that service type. The concrete service class type is unknown. Following two examples are shown for fetching services:
 
 1. Fetch
 
