@@ -1,7 +1,7 @@
 {
-  "name": "serviceprovider.typescript",
+  "name": "service-provider.typescript",
   "version": "1.0.0",
-  "description": "Service Provider implementation for TypeScript",
+  "description": "A dependency injection implementation for TypeScript by using a service provider / service locator.",
   "main": "index.js",
   "scripts": {
     "test": "mocha -r ts-node/register tests/*.ts"
@@ -14,5 +14,6 @@
     "chai": "^4.3.7",
     "mocha": "^10.2.0",
     "ts-node": "^10.9.1"
-  }
+  },
+  "dependencies": {}
 }
