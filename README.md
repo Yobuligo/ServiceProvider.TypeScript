@@ -68,30 +68,34 @@ SP.register(LoggerService, Logger, ServiceInstanceType.MULTI_INSTANTIABLE);
 ```
 
 ### Request a service
-Requesting a service means that by providing the service class a service instance of the service type is returned. The concrete implementation class of the service type is unknown, which makes it easier to replace a service.
-There are two ways to request a service:
+Requesting a service is possible by providing the corresponding service definition, which is connected to the abstract service type to the methods fetch or fetchOrNull. As the service definition is connected to the abstract service type, the caller has only a dependency to that service type. The concrete service class type is unknown. Following two examples are shown for fetching services:
 
-1. Fetch to fetch a service the service class has to be provided as key and returns the service. If the service doesn't exist an exception is raised.
+1. Fetch
+
+By using method fetch the caller expected the service to be available. The service provider returns an instance of the service type or throws an exception if the service doesn't exist.
 ```
 const logger = SP.fetch(LoggerService);
 logger.log(`Message to be logged`);
 ```
 
-2. FetchOrNull is equivalent to fetch a service. But in case that the requested service doesn't exist, undefined is returned instead of raising an exception.
-By operator `?.` the method `log` is only called in case the instance `logger` is not undefined.
+2. FetchOrNull
+ 
+FetchOrNull is equivalent to method fetch. But in case that the requested service doesn't exist, undefined is returned instead of throwing an exception.
 ```
 const logger = SP.fetchOrNull(LoggerService);
 logger?.log(`Message to be logged`);
 ```
 
 ### Remove a service
-To remove a service from the service provider method `remove` is used. As parameter the service class has to be provided as key.
+By provigin the service definition which is connected to the abstract service type to method remove a service is removed from the service provider.
 ```
 SP.remove(LoggerService);
 ```
 
 ### Check if a service exist
-To write more readable code and saving memory the method `contains` returns if a service is defined in the service provider, without the need to initialize the service in case it is registered.
+The methods contain and containsNot can be used to get if a service is defined in the service provider. It is not only more readable instead of fetching the service, but it also means there is no need to create a service instance if the service is registered and will be initialized on demand.
 ```
 const contains = SP.contains(LoggerService);
+
+const containsNot = SP.containsNot(LoggerService);
 ```
