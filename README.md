@@ -1,32 +1,34 @@
 # ServiceProvider.TypeScript
-An implementation of the service provider / service locator pattern for TypeScript. 
-To get more independent from concrete classes and tow write more flexiable code required entities, services, etc. are provided via interface type.
-The service provider is responsible for providing theses requested services.
+An implementation of dependency injection for TypeScript by using a service provider / service locator.
 
 ## Installation
 TBD
 
 ## Usage
-The following chapter describes how to use the service provider.
+The service provider is used to become more independent from concrete classes and to write more flexible code. Instead of initializing concrete service classes, a service is requested at the service provider via a service definition. The service definition is connected to a service type, which is normally represented by an interface type. A service definition per service is required, as an interface type as service type only exists at designtime, but there must be a concrete type (the service definition class) which is available at runtime, which can be analyzed and which is connected to the service type.
 
-### Implement service
-As in TypeScript interface types are only available during design time but not at runtime, it is not possible to request a service only by interface type as it won't be possible to analyze the interface type.
-Instead it is necessary to provide a concrete type which exists at runtime which is connected to the concrete service type. Theses concrete types are represented by classes which are called service class.
+At a central point the concrete services, which should be used in a session, have to be provided to the service provider either by setting initialized services or by providing the concrete service type class. When requesting a service the service provider initializes the services lazy on demand. *Currently only services having no constructor parameters are supported.*
+After providing the services, these services can be fetched by the service provider. At that point there is no dependency anymore to concrete service implementations but instead to the abstract service type.
+
+The following chapter shows how to provide and consume a service.
+
+### Implement a service
+At first a service has to be implemented and it has to be connected with a service definition.
 So, implementing a service requires the following steps:
 
-1. Provide service type
+1. Implement the service type
 ```
 interface ILogger {
   log(message: string): void;
 }
 ```
 
-2. Provide service class which refers to the service type. This class must extend `Service`.
+2. Implement the service definition class which references the service type. This class must extend `ServiceDefinition`. It is the key which is used to provide or consume a service.
 ```
-class LoggerService extends Service<ILogger> {}
+class LoggerService extends ServiceDefinition<ILogger> {}
 ```
 
-3. Provide a variant of the service itself, which implements the service type.
+3. Implement a variant of the the service itself.
 ```
 class Logger implements ILogger {
   log(message: string): void {
@@ -36,18 +38,22 @@ class Logger implements ILogger {
 ```
 
 ### Provide a service to the service provider
-To request a service from the service provider, at first it has to be provided to the service provider.
-Providing an already existing service type overrides the existing service definition by the new one.
-There are two ways to provide a service to the service provider:
+To request a service from the service provider, it has to be provided first. Normally at a central place within an application. *Currently some kind of autowiring is not supported.*
+There are two ways to provide a service which is explained below.
 
-1. Put service to set an already initialized service instance to the service provider. The service class (here 'LoggerService') is required as first parameter. The class type is the key for addressing the service type. As the service type is connected to that class, an instance of that service type has to be injected as second parameter.
-To put a service means it is handled as a singleton service. Each time that service is requested, the same instance is returned.
+**Hint:** Providing an already existing service type would replace the current service.
+
+1. Put a service 
+
+An already initialized service instance can be put to the service provider. Therefore the service definition which is connected to the abstract service type has to be injected followed by the service instance which must be of type of the abstract service type.
+
+To put a service means it is handled as a singleton service. Each time that service is requested, the same instance will be returned.
 ```
 const logger: ILogger = new Logger();
 SP.put(LoggerService, logger);
 ```
 
-2. Register service is an alternative to putting a service. Here the service is only initialized on demand.
+2. Register a service is an alternative to putting a service. Here the service is only initialized on demand.
 The registration of a service needs 3 parameter. The service class as key, which is connected to the service type. The concrete service implementation class, which should be initialized when the service is requested and the service instantiation type. The service instantiation type must be either multiple or single instantiable.
 It defines if either always the same service instance is returned or that with each service request a new instance of the service is created and returned.
 ```
