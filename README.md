@@ -1,5 +1,5 @@
 # ServiceProvider.TypeScript
-An implementation of dependency injection for TypeScript by using a service provider / service locator.
+A dependency injection implementation for TypeScript by using a service provider / service locator.
 
 ## Installation
 TBD
