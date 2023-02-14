@@ -7,7 +7,8 @@ TBD
 ## Usage
 The service provider is used to become more independent from concrete classes and to write more flexible code. Instead of initializing concrete service classes, a service is requested at the service provider via a service definition. The service definition is connected to a service type, which is normally represented by an interface type. A service definition per service is required, as an interface type as service type only exists at designtime, but there must be a concrete type (the service definition class) which is available at runtime, which can be analyzed and which is connected to the service type.
 
-At a central point the concrete services, which should be used in a session, have to be provided to the service provider either by setting initialized services or by providing the concrete service type class. When requesting a service the service provider initializes the services lazy on demand. *Currently only services having no constructor parameters are supported.*
+At a central point the concrete services, which should be used in a session, have to be provided to the service provider either by setting initialized services or by providing the concrete service type class. When requesting a service the service provider initializes the services lazy on demand. 
+
 After providing the services, these services can be fetched by the service provider. At that point there is no dependency anymore to concrete service implementations but instead to the abstract service type.
 
 The following chapter shows how to provide and consume a service.
@@ -53,10 +54,16 @@ const logger: ILogger = new Logger();
 SP.put(LoggerService, logger);
 ```
 
-2. Register a service is an alternative to putting a service. Here the service is only initialized on demand.
-The registration of a service needs 3 parameter. The service class as key, which is connected to the service type. The concrete service implementation class, which should be initialized when the service is requested and the service instantiation type. The service instantiation type must be either multiple or single instantiable.
-It defines if either always the same service instance is returned or that with each service request a new instance of the service is created and returned.
+2. Register a service
+
+Registering means to only provide the concrete service class, without the need to initialize the service before. Instead the service provide will initialize the service lazy on demand. *Currently only services having no constructor parameters are supported.*
+
+There are two obligatory parameters for the registration. The service definition which is connected to the abstract service type and the concrete service class type.
+
+Optionally the parameter *serviceInstanceType* can be set. It defines if a new service instance is created with each request or if the service is handled as singleton, which means once the service is initialized the same instance is returned with each request. As default the *serviceInstanceType* is considered to be *SINGLE_INSTANTIABLE*.
 ```
+SP.register(LoggerService, Logger);
+
 SP.register(LoggerService, Logger, ServiceInstanceType.MULTI_INSTANTIABLE);
 ```
 
