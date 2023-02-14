@@ -1,4 +1,4 @@
-# service-provider.TypeScript
+# service-provider.typescript
 A dependency injection implementation for TypeScript by using a service provider / service locator.
 
 ## Installation
