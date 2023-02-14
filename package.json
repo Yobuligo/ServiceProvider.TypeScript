@@ -2,7 +2,8 @@
   "name": "service-provider.typescript",
   "version": "1.0.0",
   "description": "A dependency injection implementation for TypeScript by using a service provider / service locator.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha -r ts-node/register tests/*.ts"
   },
@@ -15,5 +16,20 @@
     "mocha": "^10.2.0",
     "ts-node": "^10.9.1"
   },
-  "dependencies": {}
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yobuligo/service-provider.typescript.git"
+  },
+  "keywords": [
+    "DependencyInjection",
+    "ServiceProvider"
+  ],
+  "bugs": {
+    "url": "https://github.com/Yobuligo/service-provider.typescript/issues"
+  },
+  "homepage": "https://github.com/Yobuligo/service-provider.typescript#readme",
+  "files": ["/dist"]
 }
