@@ -8,7 +8,7 @@ npm install --save service-provider.typescript
 ```
 
 ## Usage
-The service provider is used to become more independent from concrete classes and to write more flexible code. Instead of initializing concrete service classes, a service is requested at the service provider via a service definition. The service definition is connected to a service type, which is normally represented by an interface type. A service definition per service is required, as an interface type as service type only exists at designtime, but there must be a concrete type (the service definition class) which is available at runtime, which can be analyzed and which is connected to the service type.
+The service provider is used to achieve independency from concrete classes and to write more flexible code. Instead of initializing concrete service classes, a service is requested from the service provider via a service definition. The service definition is connected to a service type, which is normally represented by an interface type.
 
 At a central point the concrete services, which should be used in a session, have to be provided to the service provider either by setting initialized services or by providing the concrete service type class. When requesting a service the service provider initializes the services lazy on demand. 
 
@@ -28,6 +28,8 @@ interface ILogger {
 ```
 
 2. Implement the service definition class which references the service type. This class must extend `ServiceDefinition`. It is the key which is used to provide or consume a service.
+
+A service definition per service is required, as an interface type as service type only exists at designtime, but there must be a concrete type (the service definition class) which is available at runtime, which can be analyzed and which is connected to the service type.
 ```
 class LoggerService extends ServiceDefinition<ILogger> {}
 ```
