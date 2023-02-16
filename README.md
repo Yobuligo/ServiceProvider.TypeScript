@@ -50,7 +50,7 @@ There are two ways to provide a service which are explained below.
 
 1. Put a service 
 
-Put is used to add an already initialized service to the service provider. Therefore the service definition, which is connected to the abstract service type, has to be injected as first parameter. As second parameter the service instance, which must be of type of the abstract service type, has to be passed.
+*Put* is used to add an already initialized service to the service provider. Therefore the service definition, which is connected to the abstract service type, has to be injected as first parameter. As second parameter the service instance, which must be of type of the abstract service type, has to be passed.
 
 To put a service means it is handled as a singleton service. Each time that service is requested, the same instance will be returned.
 ```
@@ -60,9 +60,9 @@ SP.put(LoggerService, logger);
 
 2. Register a service
 
-Registering means to only provide the concrete service class, without the need to initialize the service before. Instead the service provide will initialize the service lazy on demand. *Currently only services having no constructor parameters are supported.*
+Registering means to only provide the concrete service class, without the need to initialize the service before. Instead the service provider will initialize the service lazily on demand. *Currently only services without constructor parameters are supported.*
 
-There are two obligatory parameters for the registration. The service definition which is connected to the abstract service type and the concrete service class type.
+There are two mandatory parameters for the registration. The service definition, which is connected to the abstract service type, and the concrete service class type.
 
 Optionally the parameter *serviceInstanceType* can be set. It defines if a new service instance is created with each request or if the service is handled as singleton, which means once the service is initialized the same instance is returned with each request. As default the *serviceInstanceType* is considered to be *SINGLE_INSTANTIABLE*.
 ```
@@ -72,11 +72,11 @@ SP.register(LoggerService, Logger, ServiceInstanceType.MULTI_INSTANTIABLE);
 ```
 
 ### Request a service
-Requesting a service is possible by providing the corresponding service definition, which is connected to the abstract service type, to the methods fetch or fetchOrNull. As the service definition is connected to the abstract service type, the caller has only a dependency to that service type. The concrete service class type is unknown. Following two examples are shown for fetching services:
+Requesting a service is possible by providing the corresponding service definition, which is connected to the abstract service type, to the methods *fetch* or *fetchOrNull*. As the service definition is connected to the abstract service type, the caller has only a dependency to that service type. The concrete service class type is unknown. Below two examples are shown for fetching services:
 
 1. Fetch
 
-By using method fetch the caller expected the service to be available. The service provider returns an instance of the service type or throws an exception if the service doesn't exist.
+By using *fetch* the caller expects the service to be available. The service provider returns an instance of the service type or throws an exception if the service doesn't exist.
 ```
 const logger = SP.fetch(LoggerService);
 logger.log(`Message to be logged`);
@@ -84,20 +84,20 @@ logger.log(`Message to be logged`);
 
 2. FetchOrNull
  
-FetchOrNull is equivalent to method fetch. But in case that the requested service doesn't exist, undefined is returned instead of throwing an exception.
+*FetchOrNull* is equivalent to *fetch* but in case that the requested service doesn't exist, *undefined* is returned instead of throwing an exception.
 ```
 const logger = SP.fetchOrNull(LoggerService);
 logger?.log(`Message to be logged`);
 ```
 
 ### Remove a service
-By providing the service definition, which is connected to the abstract service type, to method remove a service is removed from the service provider.
+To remove a service from the service provider, pass the service definition, which is connected to the abstract service type, to *remove*.
 ```
 SP.remove(LoggerService);
 ```
 
 ### Check if a service exist
-The methods contain and containsNot can be used to get if a service is defined in the service provider. It is not only more readable instead of fetching the service, but it also means there is no need to create a service instance if the service is registered and will be initialized on demand.
+The methods *contain* and *containsNot* can be used to find out, if a service was defined in the service provider. It provides more readability and it avoids having to initialize the service by calling *fetch*.
 ```
 const contains = SP.contains(LoggerService);
 
