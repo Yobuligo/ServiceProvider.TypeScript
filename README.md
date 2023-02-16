@@ -26,7 +26,9 @@ interface ILogger {
 }
 ```
 
-2. Implement the service definition class which references the service type. This class must extend `ServiceDefinition`. It is the key which is used to provide or consume a service. A service definition per service is required, as an interface type as service type only exists at designtime, but there must be a concrete type (the service definition class) which is available at runtime, which can be analyzed and which is connected to the service type.
+2. Implement the service definition class which references the service type. This class must extend `ServiceDefinition`. It is the key which is used to provide or consume a service. 
+ 
+A service definition per service is required, as an interface type as service type only exists at designtime, but there must be a concrete type (the service definition class) which is available at runtime, which can be analyzed and which is connected to the service type.
 ```
 class LoggerService extends ServiceDefinition<ILogger> {}
 ```
@@ -41,14 +43,14 @@ class Logger implements ILogger {
 ```
 
 ### Provide a service to the service provider
-To request a service from the service provider, it has to be provided first. Normally at a central place within an application. *Currently some kind of autowiring is not supported.*
-There are two ways to provide a service which is explained below.
+To request a service from the service provider, it has to be provided first, generally at a central place within an application. *Currently some kind of autowiring is not supported.*
+There are two ways to provide a service which are explained below.
 
 **Hint:** Providing an already existing service type would replace the current service.
 
 1. Put a service 
 
-An already initialized service instance can be put to the service provider. Therefore the service definition which is connected to the abstract service type has to be injected followed by the service instance which must be of type of the abstract service type.
+Put is used to add an already initialized service to the service provider. Therefore the service definition, which is connected to the abstract service type, has to be injected as first parameter. As second parameter the service instance, which must be of type of the abstract service type, has to be passed.
 
 To put a service means it is handled as a singleton service. Each time that service is requested, the same instance will be returned.
 ```
