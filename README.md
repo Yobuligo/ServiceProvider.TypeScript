@@ -1,5 +1,5 @@
 # service-provider.typescript
-A dependency injection implementation for TypeScript by using a service provider / service locator.
+A dependency injection implementation in TypeScript by using a service provider / service locator.
 
 ## Installation
 Install the service provider via:
@@ -90,7 +90,7 @@ logger?.log(`Message to be logged`);
 ```
 
 ### Remove a service
-By provigin the service definition which is connected to the abstract service type to method remove a service is removed from the service provider.
+By providing the service definition, which is connected to the abstract service type, to method remove a service is removed from the service provider.
 ```
 SP.remove(LoggerService);
 ```
