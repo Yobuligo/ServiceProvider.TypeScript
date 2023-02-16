@@ -17,8 +17,7 @@ After providing the services, these services can be fetched by the service provi
 The following chapter shows how to provide and consume a service.
 
 ### Implement a service
-At first a service has to be implemented and it has to be connected with a service definition.
-So, implementing a service requires the following steps:
+At first a service has to be implemented and it has to be connected with a service definition. Implementing a service requires the following steps:
 
 1. Implement the service type
 ```
@@ -27,9 +26,7 @@ interface ILogger {
 }
 ```
 
-2. Implement the service definition class which references the service type. This class must extend `ServiceDefinition`. It is the key which is used to provide or consume a service.
-
-A service definition per service is required, as an interface type as service type only exists at designtime, but there must be a concrete type (the service definition class) which is available at runtime, which can be analyzed and which is connected to the service type.
+2. Implement the service definition class which references the service type. This class must extend `ServiceDefinition`. It is the key which is used to provide or consume a service. A service definition per service is required, as an interface type as service type only exists at designtime, but there must be a concrete type (the service definition class) which is available at runtime, which can be analyzed and which is connected to the service type.
 ```
 class LoggerService extends ServiceDefinition<ILogger> {}
 ```
