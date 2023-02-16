@@ -4,8 +4,10 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "commonjs",
     "allowJs": true,
-    "outDir": "./out",
+    "outDir": "./dist",
     "strict": true,
-    "sourceMap": true
-  }
+    "sourceMap": true,
+    "declaration": true
+  },
+  "include": ["src/**/*"]
 }
