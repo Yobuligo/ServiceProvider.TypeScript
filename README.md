@@ -4,7 +4,7 @@ A dependency injection implementation in TypeScript by using a service provider 
 ## Installation
 Install the service provider via:
 ```
-npm install --save service-provider.typescript
+npm install --save @yobuligo/service-provider.typescript
 ```
 
 ## Usage

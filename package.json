@@ -1,6 +1,6 @@
 {
   "name": "@yobuligo/service-provider.typescript",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A dependency injection implementation for TypeScript by using a service provider / service locator.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
