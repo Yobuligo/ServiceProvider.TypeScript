@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { ServiceDefinition } from "../src/ServiceDefinition";
 import { SP } from "../src/ServiceProvider";
-import { ServiceInstanceType } from "./../src/ServiceProviderTypes";
+import { ServiceInstanceType } from "../src/ServiceProviderTypes";
 
 enum LoggerType {
   Logger,

@@ -1,3 +1,9 @@
+import { error } from "@yobuligo/core.typescript";
+import { ifNull } from "@yobuligo/core.typescript/dist/core";
+import {
+  NoSuchElementException,
+  NotSupportedException,
+} from "@yobuligo/core.typescript/dist/Exceptions";
 import { IServiceMeta } from "./IServiceMeta";
 import { IServiceProvider } from "./IServiceProvider";
 import { ServiceDefinition } from "./ServiceDefinition";
@@ -23,7 +29,11 @@ class ServiceProviderDefault implements IServiceProvider {
   ): T[TServiceType] {
     return (
       (this.fetchOrNull(serviceDefinition) as T[TServiceType]) ??
-      this.raiseUnknownServiceException(serviceDefinition)
+      error(
+        new NoSuchElementException(
+          `Error while fetching service '${serviceDefinition.name}'. Service is unknown. Register the service or put it to the service provider.`
+        )
+      )
     );
   }
 
@@ -45,7 +55,7 @@ class ServiceProviderDefault implements IServiceProvider {
         return this.createService(serviceMeta) as T[TServiceType];
       }
       default: {
-        throw new Error(
+        throw new NotSupportedException(
           `Error while fetching service ${serviceDefinition.name}. ServiceInstanceType ${serviceMeta.serviceInstanceType} is unknown.`
         );
       }
@@ -114,9 +124,9 @@ class ServiceProviderDefault implements IServiceProvider {
     T extends ServiceDefinition<any>,
     TServiceType extends keyof T
   >(serviceMeta: IServiceMeta<T, keyof T>): T[TServiceType] | undefined {
-    if (serviceMeta.serviceInstance === undefined) {
+    ifNull(serviceMeta.serviceInstance, () => {
       serviceMeta.serviceInstance = this.createService(serviceMeta);
-    }
+    });
     return serviceMeta.serviceInstance as T[TServiceType] | undefined;
   }
 
@@ -128,14 +138,6 @@ class ServiceProviderDefault implements IServiceProvider {
       return undefined;
     }
     return new serviceMeta.concreteServiceType();
-  }
-
-  private raiseUnknownServiceException<T extends ServiceDefinition<any>>(
-    serviceDefinition: new () => T
-  ): never {
-    throw new Error(
-      `Error while fetching service '${serviceDefinition.name}'. Service is unknown. Register the service or put it to the service provider.`
-    );
   }
 }
 
