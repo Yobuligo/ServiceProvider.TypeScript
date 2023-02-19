@@ -97,7 +97,7 @@ SP.remove(LoggerService);
 ```
 
 ### Check if a service exist
-The methods *contain* and *containsNot* can be used to find out, if a service was defined in the service provider. It provides more readability and it avoids having to initialize the service by calling *fetch*.
+The methods *contain* and *containsNot* can be used to find out, if a service was defined in the service provider. It provides more readability and it avoids having to initialize the service by calling *fetchOrNull*.
 ```
 const contains = SP.contains(LoggerService);
 
